@@ -4,4 +4,4 @@ import { getMyPost } from './myPage.controller';
 
 export const myPageRouter = Router();
 
-myPageRouter.get('/post', validateToken, getMyPost);
+myPageRouter.get('/', validateToken, getMyPost);

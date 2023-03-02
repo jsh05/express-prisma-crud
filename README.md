@@ -150,7 +150,7 @@
 
 ---
 
-### 자신 게시글 불러오기 GET /my-page/post
+### 자신 게시글 불러오기 GET /my-page
 
 #### Authorization
 
