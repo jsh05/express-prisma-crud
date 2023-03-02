@@ -1,0 +1,44 @@
+name: node.js CI
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'feature/**'
+  pull_request:
+    branches:
+      - 'main'
+      - 'feature/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Generate Environment Variables File for Production
+        env:
+          DATABASE_URL: ${{ secrets.database_url }}
+          JWT_ALGORITHM: ${{ secrets.jwt_algorithm }}
+          JWT_SECRET: ${{ secrets.jwt_secret }}
+          JWT_EXPIRE_ACCESS: ${{ secrets.jwt_expire_access }}
+          JWT_EXPIRE_REFRESH: ${{ secrets.jwt_expire_refresh }}
+        run: |
+          echo "your_key=$your_key" >> .env
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build Packages
+        run: npm run build
